@@ -35,6 +35,12 @@ Cartesian = namedtuple("Coord", "x y z") # Scala case-class equivalent
 Spherical = namedtuple("Coord", "r θ ψ")
 LatLng = namedtuple("Coord", "lat lng r")
 
+"""
+To be noted:  "Lat/Lon/Alt" is just another name for spherical coordinates,
+and phi/theta/rho are just another name for latitude, longitude, and altitude. :)
+(A minor difference: altitude is usually measured from the surface of the sphere;
+rho is measured from the center -- to convert, just add/subtract the radius of the sphere.)
+"""
 class SphericalConversions: # Scala companion-object equivalent: It's a JS module
     def to_cartesian(r, θ, ψ):
         x = r * cos(θ) * sin(ψ)
@@ -67,14 +73,14 @@ class CartesianConversions:
         ψ = atan2(sqrt(pow(x,2) + pow(y,2)), z)
         return Spherical(r, θ, ψ)
 
-    def to_lat_lng(x, y, z, r):
+    def to_lat_lng(x, y, z):
         r = sqrt(pow(x,2) + pow(y,2) + pow(z,2))
         lat = asin(z / r)
         lng = atan2(y, x)
         return LatLng(lat, lng, r)
 
 class LatLngConversions:
-    def to_cartesian(lat, lon, r):
+    def to_cartesian(lat, lng, r):
         """
         Where R is the approximate radius of earth (e.g. 6371KM).
         Just to make the definition complete, in the Cartesian coordinate system:
@@ -83,7 +89,27 @@ class LatLngConversions:
         the y-axis goes through (0,90);
         and the z-axis goes through the poles.
         """
-        x = r * cos(lat) * cos(lon)
-        y = r * cos(lat) * sin(lon)
+        x = r * cos(lat) * cos(lng)
+        y = r * cos(lat) * sin(lng)
         z = r * sin(lat)
         return Cartesian(x, y, z)
+
+    def to_spherical(lat, lng, r):
+        cartesian = LatLngConversions.to_cartesian(lat, lng, r)
+        return CartesianConversions.to_spherical(*cartesian)
+
+
+
+def test():
+    radius = int("10 km".split()[0])
+    exampleLatLng = LatLng(
+        lat = 0,
+        lng = 0,
+        r = radius)
+    x, y, z = LatLngConversions.to_cartesian(*exampleLatLng)
+    r, θ, ψ = LatLngConversions.to_spherical(*exampleLatLng)
+    assert x == 10 and y == 0 and  z == 0
+    assert r == 10 and θ == 0 and  ψ == 1.5707963267948966
+    # check this out!
+    # for further reference:
+    # https://keisan.casio.com/exec/system/1359533867
