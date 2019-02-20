@@ -10,7 +10,7 @@ class Helper:
     th = f"""
 {margin}status |       point    |       time
 {margin}------------------------------------------
-{margin}       | lat      lng   |
+{margin}       | lat    lng     |
     """
 
 

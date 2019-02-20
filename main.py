@@ -28,17 +28,90 @@
 """
 
 
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-from collections import namedtuple
-from point.coordinates.coordinates import lat_lng
+
 from point.utils.generator import point_generator
-from point.utils.printer import printer
 
-Point = namedtuple("Point", "coord timestamp extra")
-xx = 10
-yy = 10
+from point.utils.printers.point_list import PointList
+from point.utils.printers.plot import Plot
+from point.utils.printers.grouped import Grouped
 
-point =   point_generator(1)
-points = [point_generator(i) for i in range(0,6)]
+from point.utils.printers.utils.bigger import normalize
+from point.utils.printers.utils.small import *
 
-print(printer(points, 10, 10))
+from point_ops.two_point_op import \
+trayectory_distance,\
+trayectory_time,\
+trayectory_velocity
+
+
+
+def procedural_documentation(points, xx, yy):
+    pointList = PointList(points)
+    plot = Plot(xx, yy)
+    grouped = Grouped(points)
+    plot.populate(points = normalize(points))
+    return paragraph([
+        f"""
+        {margin}Here is a proof of grouping by data.
+        """,
+        grouped.render(),
+        f"""
+        {margin}Here we can preview a normalized view
+        {margin}of the lat/lng coordinates.
+        """,
+        plot.render(),
+        f"""
+        {margin}Finally we have the data for each coordinate.
+        """,
+        pointList.render(),
+        f"{margin}So, story made, short, we have that a trayectory that took",
+        f"{margin}      {str(trayectory_distance(points))} nautic miles",
+        f"{margin}      {str(trayectory_time(points))} hours",
+        f"{margin}at {str(trayectory_velocity(points))} at nautic miles per hour",
+        ""
+
+    ], separator = twoline)
+
+
+
+# python -m unittest point.utils.procedural_documentation
+import unittest
+class Test(unittest.TestCase):
+    def test(self):
+        """ example of use """
+        xx = 10
+        yy = 10
+
+        point =   point_generator(1)
+        points = [point_generator(i) for i in range(0,2)]
+        result = procedural_documentation(points, xx, yy)
+        expected = """
+             Y ^
+               |
+               |
+               |
+               |
+               |          A
+               |
+               |
+               |  B
+               |
+             X -  -  -  -  -  -  -  -  -  -   >
+            A - 0 {'status': 'HAPPY'}
+            B - 1 {'status': 'HAPPY'}
+        """
+        a = to_singleline(result)
+        b = to_singleline(expected)
+        assert a == b
+if __name__ == "__main__":
+    """ example of use """
+    xx = 10
+    yy = 10
+
+    point =   point_generator(1)
+    points = [point_generator(i) for i in range(0,6)]
+    print(procedural_documentation(points, xx, yy))
+    # NOTE side-effects should be as close to main as possible

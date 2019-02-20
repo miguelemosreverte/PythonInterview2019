@@ -2,7 +2,7 @@
 from point.utils.printers.utils.small import paragraph, letter
 from point.utils.printers.utils.bigger import ascii_art
 
-class Screen:
+class Plot:
 
     def __init__(self, xx, yy):
         self.xx = xx

@@ -5,5 +5,5 @@ class PointList:
     def __init__(self, points):
         self.points = points
     def render(self):
-        return paragraph([letter(o)+" - "+str(p.timestamp) + " "+str(p.extra)
+        return paragraph([letter(o)+" - "+str(p.extra)
          for o, p in enumerate(self.points)])
