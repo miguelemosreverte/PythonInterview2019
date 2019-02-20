@@ -31,9 +31,9 @@
 from math import cos, sin, pi
 
 from collections import namedtuple
-cartesian = namedtuple("Coord", "x y z") # Scala case-class equivalent
-spherical = namedtuple("Coord", "r θ ψ")
-lat_lng = namedtuple("Coord", "lat lng r")
+cartesian = namedtuple("Cartesian", "x y z") # Scala case-class equivalent
+spherical = namedtuple("Spherical", "r θ ψ")
+lat_lng = namedtuple("LatLng", "lat lng r")
 
 """
 To be noted:  "Lat/Lon/Alt" is just another name for spherical coordinates,
