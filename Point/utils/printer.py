@@ -4,9 +4,9 @@
 
 import string
 from collections import namedtuple
-from Point.Coordinates.coordinates import lat_lng
-from Point.utils.generator import point_generator
-from Point.Point import Point
+from point.coordinates.coordinates import lat_lng
+from point.utils.generator import point_generator
+from point.point import Point
 
 
 
@@ -53,28 +53,63 @@ class Screen:
             self.screen[y][x] = ascii_art(x, yy-y, xx, yy, letter(index))
 
     def render(self):
-        for t in self.screen:
-            print(' '.join(t))
+        return "\n".join([" ".join(t) for t in self.screen])
 
 class PointList:
     def __init__(self, points):
         self.points = points
     def render(self):
-        for index, point in enumerate(self.points):
-            print(letter(index) + " - " + str(point.timestamp) + " " + str(point.extra))
+        return "\n".join([letter(o)+" - "+str(p.timestamp) + " "+str(p.extra)
+         for o, p in enumerate(self.points)])
 
 def printer(points, xx, yy):
     pointList = PointList(points)
     screen = Screen(xx, yy)
     screen.populate(points = normalize(points))
-    screen.render()
-    pointList.render()
+    return "\n".join([
+        screen.render(),
+        pointList.render()
+    ])
 
+
+to_singleline = \
+    lambda m: " ".join(m.replace('\n', ' ').split()).strip()
+
+# python -m unittest point.utils.printer
+import unittest
+class Test(unittest.TestCase):
+    def test(self):
+        """ example of use """
+        xx = 10
+        yy = 10
+
+        point =   point_generator(1)
+        points = [point_generator(i) for i in range(0,2)]
+        result = printer(points, xx, yy)
+        expected = """
+             Y ^
+               |
+               |
+               |
+               |
+               |          A
+               |
+               |
+               |  B
+               |
+             X -  -  -  -  -  -  -  -  -  -   >
+            A - 0 {'status': 'HAPPY'}
+            B - 1 {'status': 'HAPPY'}
+        """
+        a = to_singleline(result)
+        b = to_singleline(expected)
+        assert a == b
 if __name__ == "__main__":
     """ example of use """
     xx = 10
     yy = 10
 
     point =   point_generator()
-    points = [point_generator() for i in range(0,20)]
-    printer(points, xx, yy)
+    points = [point_generator(i) for i in range(0,20)]
+    print(printer(points, xx, yy))
+    # NOTE side-effects should be as close to main as possible

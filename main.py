@@ -30,14 +30,14 @@
 
 
 from collections import namedtuple
-from Point.Coordinates.coordinates import lat_lng
-from Point.utils.generator import point_generator
-Point = namedtuple("Point", "coord timestamp extra")
+from point.coordinates.coordinates import lat_lng
+from point.utils.generator import point_generator
+from point.utils.printer import printer
 
-from Point.utils.printer import printer
+Point = namedtuple("Point", "coord timestamp extra")
 xx = 10
 yy = 10
 
-point =   point_generator()
-points = [point_generator() for i in range(0,20)]
-printer(points, xx, yy)
+point =   point_generator(1)
+points = [point_generator(i) for i in range(0,20)]
+print(point)

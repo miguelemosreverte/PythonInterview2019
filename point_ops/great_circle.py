@@ -5,7 +5,7 @@
 import sys
 import math
 
-from coordinates import lat_lng
+from point.coordinates.coordinates import lat_lng
 
 def great_circle(x1, y1, x2, y2, radius):
 
@@ -32,17 +32,22 @@ def great_circle(x1, y1, x2, y2, radius):
     # https://www2.clarku.edu/faculty/djoyce/trig/angle.html
     return arc_length
 
-def great_circle_earth_nautic_miles(lat, lng):
+def great_circle_earth_nautic_miles(a, b):
     # Each degree on a great circle of Earth is 60 nautical miles.
-    return great_circle(*lat, *lng, radius=60.0)
+    return great_circle(*a, *b, radius=60.0)
 
-def test():
-    a = lat_lng(0, 0, None)
-    b = lat_lng(45, 90, None)
-    result = great_circle_earth_nautic_miles(
-        (a.lat, a.lng), (b.lat, b.lng)
-    )
-    assert result == 5400
-    # check this out!
-    # for further reference:
-    # http://edwilliams.org/gccalc.htm
+
+
+# python -m unittest point_ops.great_circle
+import unittest
+class Test(unittest.TestCase):
+    def test(self):
+        a = lat_lng(0, 0, None)
+        b = lat_lng(45, 90, None)
+        result = great_circle_earth_nautic_miles(
+            (a.lat, a.lng), (b.lat, b.lng)
+        )
+        assert result == 5400
+        # check this out!
+        # for further reference:
+        # http://edwilliams.org/gccalc.htm

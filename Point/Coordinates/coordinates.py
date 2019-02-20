@@ -129,18 +129,19 @@ class LatLng:
     def from_cartesian(cartesian):
         return CartesianConversions.to_lat_lng(*cartesian)
 
-# pip install -r requirements.txt
-# pytest main.py
-def test():
-    radius = int("10 km".split()[0])
-    exampleLatLng = lat_lng(
-        lat = 0,
-        lng = 0,
-        r = radius)
-    x, y, z = Cartesian.from_lat_lng(exampleLatLng)
-    r, θ, ψ = Spherical.from_lat_lng(exampleLatLng)
-    assert x == 10 and y == 0 and  z == 0
-    assert r == 10 and θ == 0 and  ψ == 1.5707963267948966
-    # check this out!
-    # for further reference:
-    # https://keisan.casio.com/exec/system/1359533867
+# python -m unittest point.coordinates.coordinates
+import unittest
+class Test(unittest.TestCase):
+    def test(self):
+        radius = int("10 km".split()[0])
+        exampleLatLng = lat_lng(
+            lat = 0,
+            lng = 0,
+            r = radius)
+        x, y, z = Cartesian.from_lat_lng(exampleLatLng)
+        r, θ, ψ = Spherical.from_lat_lng(exampleLatLng)
+        assert x == 10 and y == 0 and  z == 0
+        assert r == 10 and θ == 0 and  ψ == 1.5707963267948966
+        # check this out!
+        # for further reference:
+        # https://keisan.casio.com/exec/system/1359533867

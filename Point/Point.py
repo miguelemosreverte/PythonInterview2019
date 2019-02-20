@@ -30,5 +30,5 @@
 
 
 from collections import namedtuple
-from Point.Coordinates.coordinates import lat_lng
+from point.coordinates.coordinates import lat_lng
 Point = namedtuple("Point", "coord timestamp extra")

@@ -1,21 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
 import random
 from collections import namedtuple
-from Point.Coordinates.coordinates import lat_lng
+from point.coordinates.coordinates import lat_lng
 
 Point = namedtuple("Point", "coord timestamp extra")
 
 
-
-def point_generator():
+def point_generator(seed):
+    random.seed(seed) # NOTE determinism allows validation
+    global counter # NOTE dangerous but valid due to context simplicity
     gen = lambda min,max: random.randint(min, max)
     lat = gen(-90, 90)
     lng = gen(-180, 180)
-    r = 20
-    timestamp = gen(0, 2359) #HHMM
+    r = int("6371 km is the Earth radius.".split()[0])
+    timestamp = seed
     statuses = [
         "HAPPY",
         "TIRED"
@@ -28,3 +28,13 @@ def point_generator():
 
 # point = point_generator()
 # array = [point_generator() for i in range(0,20)]
+
+
+# python -m unittest point.utils.generator
+import unittest
+class Test(unittest.TestCase):
+    def test(self):
+        point = point_generator(1)
+        assert point == Point(  coord=lat_lng(lat=-56, lng=111, r=6371),
+                                timestamp=1,
+                                extra={'status': 'HAPPY'})
