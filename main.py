@@ -39,5 +39,6 @@ xx = 10
 yy = 10
 
 point =   point_generator(1)
-points = [point_generator(i) for i in range(0,20)]
-print(point)
+points = [point_generator(i) for i in range(0,6)]
+
+print(printer(points, 10, 10))

@@ -2,78 +2,29 @@
 # -*- coding: utf-8 -*-
 
 
-import string
-from collections import namedtuple
-from point.coordinates.coordinates import lat_lng
 from point.utils.generator import point_generator
-from point.point import Point
+
+from point.utils.printers.point_list import PointList
+from point.utils.printers.screen import Screen
+from point.utils.printers.grouped import Grouped
+
+from point.utils.printers.utils.bigger import normalize
+from point.utils.printers.utils.small import paragraph, twoline, margin
 
 
-
-
-def normalize(points):
-    return  [
-    Point(
-      lat_lng(
-        lat = (point.coord.lat/(90*2))+0.5,
-        lng = (point.coord.lng/(180*2))+0.5,
-        r=2
-      ),
-      point.timestamp,
-      point.extra
-    ) for point in points]
-
-
-def ascii_art(x,y, xx, yy, value = " "):
-    # "edge" cases, quite literally!
-    left_top = lambda x,y: x == 0 and y == yy
-    right_bottom = lambda x,y: x == xx and y == 0
-    if left_top(x,y): return " Y ^ "
-    if right_bottom(x,y): return " >"
-    if y == 0 and x == 0: return " X - "
-    if y == 0: return "- "
-    if x == 0: return "   |"+ value
-    return value
-
-letter =  lambda index: string.ascii_uppercase[index]
-class Screen:
-
-    def __init__(self, xx, yy):
-        self.xx = xx
-        self.yy = yy
-        self.screen = [[ascii_art(x,y, xx, yy) for x in range(0,xx+1)]
-        for y in range(yy, 0-1, -1)]
-
-    def populate(self, points):
-        xx = self.xx
-        yy = self.yy
-        for index, ((lat, lng, r), timestamp, extra) in enumerate(points):
-            x = int(lat * xx)
-            y = int(lng * yy)
-            self.screen[y][x] = ascii_art(x, yy-y, xx, yy, letter(index))
-
-    def render(self):
-        return "\n".join([" ".join(t) for t in self.screen])
-
-class PointList:
-    def __init__(self, points):
-        self.points = points
-    def render(self):
-        return "\n".join([letter(o)+" - "+str(p.timestamp) + " "+str(p.extra)
-         for o, p in enumerate(self.points)])
 
 def printer(points, xx, yy):
     pointList = PointList(points)
     screen = Screen(xx, yy)
+    grouped = Grouped(points)
     screen.populate(points = normalize(points))
-    return "\n".join([
+    return paragraph([
+        grouped.render(),
         screen.render(),
         pointList.render()
-    ])
+    ], separator = twoline)
 
 
-to_singleline = \
-    lambda m: " ".join(m.replace('\n', ' ').split()).strip()
 
 # python -m unittest point.utils.printer
 import unittest

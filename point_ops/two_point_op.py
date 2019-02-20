@@ -49,8 +49,5 @@ class Test(unittest.TestCase):
             trayectory_distance(Test.points), 7834.998250810107)
 
     def test_trayectory_velocity(self):
-        r = trayectory_velocity(Test.points)
-        for point in Test.points:
-            print(point.coord)
         self.assertEqual(
             trayectory_velocity(Test.points), 3917.4991254050533)
