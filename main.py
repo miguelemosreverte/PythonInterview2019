@@ -46,7 +46,12 @@ trayectory_distance,\
 trayectory_time,\
 trayectory_velocity
 
+from point_ops.N_points_op import \
+furthest,\
+closest
 
+
+AMMOUNT_OF_POINTS = 6
 
 def procedural_documentation(points, xx, yy):
     pointList = PointList(points)
@@ -71,9 +76,25 @@ def procedural_documentation(points, xx, yy):
         f"{margin}      {str(trayectory_distance(points))} nautic miles",
         f"{margin}      {str(trayectory_time(points))} hours",
         f"{margin}at {str(trayectory_velocity(points))} at nautic miles per hour",
+        "",
+        f"{margin}Now, the furthest point from A is {letter(furthest(points[0], points[1:]).point.timestamp)}",
+        f"{margin}     ({str(int(furthest(points[0], points[1:]).distance))} nautic miles)",
+        "",
+        f"{margin}And the closest is {letter(closest(points[0], points[1:]).point.timestamp)}",
+        f"{margin}     ({str(int(closest(points[0], points[1:]).distance))} nautic miles)",
         ""
 
     ], separator = twoline)
+
+
+
+
+
+if __name__ == "__main__":
+    points = [point_generator(i) for i in range(0, AMMOUNT_OF_POINTS)]
+    print(procedural_documentation(points, xx = 10, yy = 10))
+    # NOTE side-effects should be as close to main as possible
+
 
 
 
@@ -81,37 +102,104 @@ def procedural_documentation(points, xx, yy):
 import unittest
 class Test(unittest.TestCase):
     def test(self):
-        """ example of use """
-        xx = 10
-        yy = 10
-
-        point =   point_generator(1)
-        points = [point_generator(i) for i in range(0,2)]
-        result = procedural_documentation(points, xx, yy)
+        points = [point_generator(i) for i in range(0, AMMOUNT_OF_POINTS)]
+        result = procedural_documentation(points, xx = 10, yy = 10)
         expected = """
-             Y ^
-               |
-               |
-               |
-               |
-               |          A
-               |
-               |
-               |  B
-               |
-             X -  -  -  -  -  -  -  -  -  -   >
-            A - 0 {'status': 'HAPPY'}
-            B - 1 {'status': 'HAPPY'}
+
+
+
+
+
+                Here is a proof of grouping by data.
+
+
+
+
+
+                status |       point    |       time
+
+                ------------------------------------------
+
+                       | lat    lng     |
+
+
+                HAPPY  | 8      35      |        0
+                HAPPY  | -56    111     |        1
+                HAPPY  | -76    -134    |        2
+                HAPPY  | -30    123     |        3
+                HAPPY  | -30    -25     |        4
+
+                ------------------------------------------
+
+                TIRED  | 69     -50     |        5
+
+                ------------------------------------------
+
+
+
+
+
+                Here we can preview a normalized view
+
+                of the lat/lng coordinates.
+
+
+
+                 Y ^
+                   |C
+                   |
+                   |                F
+                   |      E
+                   |          A
+                   |
+                   |
+                   |  B   D
+                   |
+                 X -  -  -  -  -  -  -  -  -  -   >
+
+
+
+                Finally we have the data for each coordinate.
+
+
+
+                A - {'status': 'HAPPY'}
+                B - {'status': 'HAPPY'}
+                C - {'status': 'HAPPY'}
+                D - {'status': 'HAPPY'}
+                E - {'status': 'HAPPY'}
+                F - {'status': 'TIRED'}
+
+
+                So, story made, short, we have that a trayectory that took
+
+
+                      2599399.095842449 nautic miles
+
+
+                      5 hours
+
+
+                at 519879.8191684898 at nautic miles per hour
+
+
+
+
+                Now, the furthest point from A is C
+
+
+                     (711820 nautic miles)
+
+
+
+
+                And the closest is E
+
+
+                     (439268 nautic miles)
+
+
         """
         a = to_singleline(result)
         b = to_singleline(expected)
         assert a == b
-if __name__ == "__main__":
-    """ example of use """
-    xx = 10
-    yy = 10
-
-    point =   point_generator(1)
-    points = [point_generator(i) for i in range(0,6)]
-    print(procedural_documentation(points, xx, yy))
-    # NOTE side-effects should be as close to main as possible

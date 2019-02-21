@@ -12,11 +12,10 @@ def given_two_points_calculate(function, aggregate_function = sum):
     return curry
 
 
-from point_ops.great_circle import great_circle
+from point_ops.great_circle import distance as great_circle_distance
+from point.coordinates.coordinates import lat_lng
 def distance(pointA, pointB):
-    a = (pointA.coord.lat, pointA.coord.lng)
-    b = (pointB.coord.lat, pointB.coord.lng)
-    return great_circle(*a, *b, radius=60.0)
+    return great_circle_distance(pointA.coord, pointB.coord)
 
 
 def time_delta(pointA, pointB):
@@ -46,8 +45,8 @@ class Test(unittest.TestCase):
 
     def test_trayectory_distance(self):
         self.assertEqual(
-            trayectory_distance(Test.points), 7834.998250810107)
+            trayectory_distance(Test.points), 831946.2309318532)
 
     def test_trayectory_velocity(self):
         self.assertEqual(
-            trayectory_velocity(Test.points), 3917.4991254050533)
+            trayectory_velocity(Test.points),  415973.1154659266)
