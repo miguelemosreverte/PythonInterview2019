@@ -1,3 +1,6 @@
+
+# PythonInterview2019
+Guidelines:
 ```scala
 
 1) Define "great circle" distance
@@ -24,7 +27,6 @@
 3) Having a point, and an array of points:
     define closest, furthest,
     radious of circle that starts at central point and ends at furthest point
-
 
 
 ```
